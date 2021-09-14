@@ -119,11 +119,12 @@ import { useI18n } from "vue-i18n";
 import { AuthHelper } from "../../utils/helpers";
 import { Store } from "vuex";
 import { AxiosInstance } from "axios";
+import enUS from "../../i18n/en-US";
 
 export default defineComponent({
   name: "Auth",
   setup() {
-    const { t } = useI18n();
+    const { t, getLocaleMessage } = useI18n();
 
     const {
       "@gastienne/auth": {
@@ -147,6 +148,7 @@ export default defineComponent({
     const emailResetPassword = ref("");
 
     onMounted(() => {
+      console.log("$$$$$$$$$$$$$$$$$$ : ", getLocaleMessage("en-US"));
       if ($store.state.auth.token) {
         $router.replace(LOCAL_SUCCESS_REDIRECTION_ROUTE);
       }
