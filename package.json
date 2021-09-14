@@ -1,0 +1,37 @@
+{
+  "name": "@gastienne/quasar-app-extension-auth",
+  "version": "1.0.5",
+  "description": "A Quasar auth app extension",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "GastienneLea <lea@sowellapp.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.9.1",
+    "@types/validator": "^13.6.3",
+    "quasar": "^2.0.4",
+    "typescript": "^4.4.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "qs": "^6.10.1",
+    "validator": "^13.6.0",
+    "vue-i18n": "^8.25.1",
+    "vuex": "4.0"
+  }
+}
