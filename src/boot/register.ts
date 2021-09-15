@@ -1,16 +1,22 @@
+//@ts-ignore
+import prompts from "app/quasar.extensions.json";
 import { boot } from "quasar/wrappers";
 import { BootInterface } from "../interfaces";
-import newRoutes from "../router";
+import newRoutes from "../routes";
 
-export default boot(({ router }: BootInterface) => {
+export default boot(({ app, router }: BootInterface) => {
+  app.provide("$prompts", prompts);
   // Register auth routes
   let { routes } = router.options;
   let routeData = routes.find((r) => r.path === "/");
-  const currentRoutes = routeData.children.map((route) => route.path);
+  if (routeData?.children) {
+    const currentRoutes = routeData.children.map((route) => route.path);
 
-  newRoutes.forEach((route) => {
-    if (!currentRoutes.includes(route.path)) {
-      router.addRoute(route);
-    }
-  });
+    newRoutes.forEach((route) => {
+      if (!currentRoutes.includes(route.path)) {
+        router.addRoute(route);
+      }
+    });
+  }
+  app.provide("$router", router);
 });
