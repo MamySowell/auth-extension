@@ -2,7 +2,7 @@
 import prompts from "app/quasar.extensions.json";
 import { boot } from "quasar/wrappers";
 import { BootInterface } from "../interfaces";
-import newRoutes from "../router";
+import newRoutes from "../routes";
 
 export default boot(({ app, router }: BootInterface) => {
   app.provide("$prompts", prompts);
@@ -18,4 +18,5 @@ export default boot(({ app, router }: BootInterface) => {
       }
     });
   }
+  app.provide("$router", router);
 });

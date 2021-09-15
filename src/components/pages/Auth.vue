@@ -67,9 +67,8 @@
 //import prompts from "app/quasar.extensions.json";
 import isEmail from "validator/es/lib/isEmail";
 import { defineComponent, ref } from "vue";
-import { $api, $prompts } from "../../injects";
+import { $api, $prompts, $router } from "../../injects";
 import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
 export default defineComponent({
   name: "Auth",
   setup() {
@@ -81,7 +80,7 @@ export default defineComponent({
     const { LOCAL_SUCCESS_REDIRECTION_ROUTE, AUTH_SERVER_SIGNING_ROUTE } =
       $prompts();
     const $q = useQuasar();
-    const $router = useRouter();
+    const { push } = $router();
 
     const validations = ref({
       email: [
@@ -98,14 +97,18 @@ export default defineComponent({
     const onSubmit = () => {
       loading.value = true;
       const data = {
-        email: email.value,
-        password: password.value,
+        auth: {
+          email: email.value,
+          password: password.value,
+        },
       };
 
       post(AUTH_SERVER_SIGNING_ROUTE, data)
         .then((response: any) => {
-          console.log("$$$$$ response : ", response);
-          $router.push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
+          const token = response.data.jwt;
+          loading.value = false;
+          console.log("$$$$ token : ", token);
+          push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })
         .catch(() => {
           loading.value = false;
