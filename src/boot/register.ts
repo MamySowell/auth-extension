@@ -1,20 +1,8 @@
-import newRoutes from "../router";
-import authModule from "../store";
 import { boot } from "quasar/wrappers";
-import authHepler from "../utils/helpers";
-//@ts-ignore
-import prompts from "app/quasar.extensions.json";
-import { axiosInstance } from "../utils/axios";
 import { BootInterface } from "../interfaces";
+import newRoutes from "../router";
 
-export default boot(({ app, router, store }: BootInterface) => {
-  // Register store module
-  store.registerModule("auth", authModule);
-
-  app.provide("$store", store);
-  app.provide("$auth", authHepler);
-  app.provide("$axios", axiosInstance);
-  app.provide("$prompts", prompts);
+export default boot(({ router }: BootInterface) => {
   // Register auth routes
   let { routes } = router.options;
   let routeData = routes.find((r) => r.path === "/");
