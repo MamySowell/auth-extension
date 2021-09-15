@@ -10,10 +10,5 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "types": ["node"]
-  },
-  "files": [
-    "./src/index.ts",
-    "./src/prompts.ts",
-    "./src/install.ts",
-  ],
+  }
 }
