@@ -67,6 +67,9 @@
 //import prompts from "app/quasar.extensions.json";
 import isEmail from "validator/es/lib/isEmail";
 import { defineComponent, ref } from "vue";
+import { $api, $prompts } from "../../injects";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "Auth",
   setup() {
@@ -74,6 +77,11 @@ export default defineComponent({
     const password = ref("");
     const loading = ref(false);
     const showPassword = ref(false);
+    const { post } = $api();
+    const { LOCAL_SUCCESS_REDIRECTION_ROUTE, AUTH_SERVER_SIGNING_ROUTE } =
+      $prompts();
+    const $q = useQuasar();
+    const $router = useRouter();
 
     const validations = ref({
       email: [
@@ -93,7 +101,20 @@ export default defineComponent({
         email: email.value,
         password: password.value,
       };
-      console.log("$$$$ data : ", data);
+
+      post(AUTH_SERVER_SIGNING_ROUTE, data)
+        .then((response: any) => {
+          console.log("$$$$$ response : ", response);
+          $router.push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
+        })
+        .catch(() => {
+          loading.value = false;
+          $q.notify({
+            message: "Identifiant incorrect",
+            color: "negative",
+            position: "top",
+          });
+        });
     };
 
     const isSubmitBtnDisabled = () => {
