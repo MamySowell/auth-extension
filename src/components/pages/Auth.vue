@@ -110,7 +110,7 @@
 </template>
 
 <script lang="ts">
-import prompts from "app/quasar.extensions.json";
+//import prompts from "app/quasar.extensions.json";
 import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import { ref, onMounted, defineComponent, inject } from "vue";
@@ -118,27 +118,24 @@ import isEmail from "validator/es/lib/isEmail";
 import { useI18n } from "vue-i18n";
 import { AuthHelper } from "../../utils/helpers";
 import { Store } from "vuex";
-import { AxiosInstance } from "axios";
-import enUS from "../../i18n/en-US";
-
+import { $prompts, $api } from "../../injects";
 export default defineComponent({
   name: "Auth",
   setup() {
-    const { t, getLocaleMessage } = useI18n();
+    const { t } = useI18n();
 
     const {
-      "@gastienne/auth": {
-        AUTH_TYPE,
-        LOCAL_SUCCESS_REDIRECTION_ROUTE,
-        LOCAL_CHECK_CODE_ROUTE,
-      },
-    } = prompts;
+      AUTH_TYPE,
+      LOCAL_SUCCESS_REDIRECTION_ROUTE,
+      LOCAL_CHECK_CODE_ROUTE,
+      AUTH_SERVER_SIGNING_ROUTE,
+    } = $prompts();
 
     const $store = inject("$store") as Store<any>;
-    const $auth = inject("$auth") as AuthHelper;
+    const $auth = inject<AuthHelper>("$auth") as AuthHelper;
     const $q = useQuasar();
     const $router = useRouter();
-    const $axios = inject("$axios") as AxiosInstance;
+    const { defaults, post } = $api();
     const phoneRegex = /\+.[0-9]/;
     const emailOrPhone = ref("");
     const password = ref("");
@@ -148,7 +145,6 @@ export default defineComponent({
     const emailResetPassword = ref("");
 
     onMounted(() => {
-      console.log("$$$$$$$$$$$$$$$$$$ : ", getLocaleMessage("en-US"));
       if ($store.state.auth.token) {
         $router.replace(LOCAL_SUCCESS_REDIRECTION_ROUTE);
       }
@@ -212,13 +208,12 @@ export default defineComponent({
         };
       }
 
-      $auth
-        .signIn(data)
+      post(AUTH_SERVER_SIGNING_ROUTE, data)
         .then((response: any) => {
           const token = response.data.token;
           $store.dispatch("auth/updateToken", token);
 
-          $axios.defaults.headers.Authorization = `${AUTH_TYPE} ${token}`;
+          defaults.headers.Authorization = `${AUTH_TYPE} ${token}`;
 
           $router.push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })

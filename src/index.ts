@@ -9,6 +9,8 @@ function extendConf(conf: any) {
 
   conf.boot.push("~@gastienne/quasar-app-extension-auth/src/boot/i18n.ts");
 
+  conf.boot.push("~@gastienne/quasar-app-extension-auth/src/boot/axios.ts");
+
   conf.build.transpileDependencies.push(/quasar-app-extension-auth[\\/]src/);
 
   const requiredPlugins: string[] = ["Notify"];
