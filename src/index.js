@@ -5,6 +5,7 @@ function extendConf(conf) {
   conf.boot.push(
     "~@sowell/quasar-app-extension-auth/src/boot/router-guards.ts"
   );
+  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/axios.ts");
   conf.build.transpileDependencies.push(/quasar-app-extension-auth[\\/]src/);
   const requiredPlugins = ["Notify"];
   requiredPlugins.forEach((plugin) => {
