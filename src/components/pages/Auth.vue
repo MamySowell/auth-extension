@@ -70,6 +70,7 @@ import { defineComponent, ref, onMounted } from "vue";
 import { $api, $prompts, $router, $store } from "../../injects";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
+import { AxiosError, AxiosResponse } from "axios";
 export default defineComponent({
   name: "Auth",
   setup() {
@@ -112,18 +113,19 @@ export default defineComponent({
       };
 
       post(AUTH_SERVER_SIGNING_ROUTE, data)
-        .then((response: any) => {
+        .then((response: AxiosResponse) => {
           const token = response.data.jwt;
           dispatch("auth/updateToken", token);
           const payload = parseJwt(token);
           const user = { roles: payload.roles };
           dispatch("auth/updateUser", user);
+
           push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })
-        .catch(() => {
+        .catch((error: AxiosError) => {
           loading.value = false;
           $q.notify({
-            message: t("auth.loginFailed"),
+            message: t(`auth.${error.response?.status}`),
             color: "negative",
             position: "top",
           });
