@@ -114,12 +114,15 @@ export default defineComponent({
         .then((response: any) => {
           const token = response.data.jwt;
           dispatch("auth/updateToken", token);
+          const payload = parseJwt(token);
+          const user = { roles: payload.roles };
+          dispatch("auth/updateUser", user);
           push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })
-        .catch(() => {
+        .catch((error) => {
           loading.value = false;
           $q.notify({
-            message: "Identifiant incorrect",
+            message: error.message,
             color: "negative",
             position: "top",
           });
@@ -133,6 +136,10 @@ export default defineComponent({
         password.value &&
         password.value.length > 5
       );
+    };
+
+    const parseJwt = (token: string) => {
+      return JSON.parse(window.atob(token.split(".")[1]));
     };
 
     return {
