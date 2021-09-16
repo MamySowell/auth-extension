@@ -45,6 +45,14 @@
                 </template>
               </q-input>
             </q-card-section>
+            <div class="forgottenPass">
+              <q-btn
+                @click="forgottenPassword = true"
+                no-caps
+                flat
+                :label="$t('auth.forgottenPassword')"
+              />
+            </div>
             <q-card-actions>
               <q-btn
                 rounded
@@ -58,6 +66,45 @@
             </q-card-actions>
           </q-form>
         </q-card>
+        <div>
+          <q-dialog v-model="forgottenPassword" persistent>
+            <q-card style="min-width: 350px">
+              <q-card-section>
+                <p class="resetPasswordTitle">
+                  {{ $t("auth.tapEmail") }}
+                </p>
+              </q-card-section>
+
+              <q-card-section class="q-pt-none">
+                <q-input
+                  v-model="emailResetPassword"
+                  dense
+                  rounded
+                  outlined
+                  :placeholder="$t('auth.email')"
+                  autofocus
+                />
+              </q-card-section>
+
+              <q-card-actions align="right">
+                <q-btn
+                  outline
+                  rounded
+                  :label="$t('common.cancel')"
+                  class="btn-min"
+                  v-close-popup
+                />
+                <q-btn
+                  rounded
+                  color="primary"
+                  :label="$t('common.send')"
+                  class="btn-min"
+                  @click="resetPassword"
+                />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </div>
       </q-page>
     </q-page-container>
   </q-layout>
@@ -78,9 +125,15 @@ export default defineComponent({
     const password = ref("");
     const loading = ref(false);
     const showPassword = ref(false);
+    const forgottenPassword = ref(false);
+    const emailResetPassword = ref("");
     const { post } = $api();
-    const { LOCAL_SUCCESS_REDIRECTION_ROUTE, AUTH_SERVER_SIGNING_ROUTE } =
-      $prompts();
+    const {
+      LOCAL_SUCCESS_REDIRECTION_ROUTE,
+      AUTH_SERVER_SIGNING_ROUTE,
+      LOCAL_CHECK_CODE_ROUTE,
+      AUTH_SERVER_RESET_PASSWORD_ROUTE,
+    } = $prompts();
     const $q = useQuasar();
     const { push, replace } = $router();
     const { state, dispatch } = $store();
@@ -102,6 +155,29 @@ export default defineComponent({
         (val: string) => val.length > 5 || t("auth.passwordLengthError"),
       ],
     });
+
+    const resetPassword = () => {
+      const data = {
+        email: emailResetPassword.value,
+      };
+
+      post(AUTH_SERVER_RESET_PASSWORD_ROUTE, data)
+        .then(() => {
+          $q.notify({
+            message: t("auth.emailSent"),
+            color: "positive",
+            position: "top",
+          });
+          forgottenPassword.value = false;
+        })
+        .catch(() => {
+          $q.notify({
+            message: t("auth.emailNotRecognize"),
+            color: "negative",
+            position: "top",
+          });
+        });
+    };
 
     const onSubmit = () => {
       loading.value = true;
@@ -153,6 +229,9 @@ export default defineComponent({
       validations,
       isSubmitBtnDisabled,
       onSubmit,
+      forgottenPassword,
+      emailResetPassword,
+      resetPassword,
     };
   },
 });
