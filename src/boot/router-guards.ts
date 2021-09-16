@@ -5,11 +5,16 @@ import { BootInterface } from "../interfaces";
 
 export default boot(({ router, store }: BootInterface) => {
   const {
-    "@sowell/auth": { LOCAL_LOGIN_ROUTE },
+    "@sowell/auth": { LOCAL_LOGIN_ROUTE, LOCAL_CHECK_CODE_ROUTE },
   } = prompts;
 
   router.beforeEach((to, from, next) => {
-    if (to.path !== LOCAL_LOGIN_ROUTE) {
+    const token = store.state.auth.token;
+    if (
+      !token &&
+      to.path !== LOCAL_LOGIN_ROUTE &&
+      to.path !== LOCAL_CHECK_CODE_ROUTE
+    ) {
       next(LOCAL_LOGIN_ROUTE);
     } else {
       next();

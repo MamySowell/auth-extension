@@ -66,8 +66,8 @@
 <script lang="ts">
 //import prompts from "app/quasar.extensions.json";
 import isEmail from "validator/es/lib/isEmail";
-import { defineComponent, ref } from "vue";
-import { $api, $prompts, $router } from "../../injects";
+import { defineComponent, ref, onMounted } from "vue";
+import { $api, $prompts, $router, $store } from "../../injects";
 import { useQuasar } from "quasar";
 export default defineComponent({
   name: "Auth",
@@ -80,7 +80,14 @@ export default defineComponent({
     const { LOCAL_SUCCESS_REDIRECTION_ROUTE, AUTH_SERVER_SIGNING_ROUTE } =
       $prompts();
     const $q = useQuasar();
-    const { push } = $router();
+    const { push, replace } = $router();
+    const { state, dispatch } = $store();
+
+    onMounted(() => {
+      if (state.auth.token) {
+        replace(LOCAL_SUCCESS_REDIRECTION_ROUTE);
+      }
+    });
 
     const validations = ref({
       email: [
@@ -106,14 +113,16 @@ export default defineComponent({
       post(AUTH_SERVER_SIGNING_ROUTE, data)
         .then((response: any) => {
           const token = response.data.jwt;
-          loading.value = false;
-          console.log("$$$$ token : ", token);
+          dispatch("auth/updateToken", token);
+          const payload = parseJwt(token);
+          const user = { roles: payload.roles };
+          dispatch("auth/updateUser", user);
           push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })
-        .catch(() => {
+        .catch((error) => {
           loading.value = false;
           $q.notify({
-            message: "Identifiant incorrect",
+            message: error.message,
             color: "negative",
             position: "top",
           });
@@ -127,6 +136,10 @@ export default defineComponent({
         password.value &&
         password.value.length > 5
       );
+    };
+
+    const parseJwt = (token: string) => {
+      return JSON.parse(window.atob(token.split(".")[1]));
     };
 
     return {
