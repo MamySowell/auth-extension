@@ -5,7 +5,7 @@
         <q-card square>
           <q-card-section>
             <div class="text-h5 text-center head">
-              Connectez-vous à l'interface
+              {{ $t("auth.title") }}
             </div>
           </q-card-section>
 
@@ -15,7 +15,7 @@
                 id="email"
                 v-model.trim="email"
                 type="email"
-                label="Email"
+                :label="$t('auth.email')"
                 :rules="validations['email']"
                 lazy-rules
                 autofocus
@@ -28,7 +28,7 @@
                 id="password"
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                label="Mot de passe"
+                :label="$t('auth.password')"
                 :rules="validations['password']"
                 lazy-rules
                 rounded
@@ -48,7 +48,7 @@
             <q-card-actions>
               <q-btn
                 rounded
-                label="Se connecter"
+                :label="$t('auth.login')"
                 color="primary"
                 :loading="loading"
                 type="submit"
@@ -69,6 +69,7 @@ import isEmail from "validator/es/lib/isEmail";
 import { defineComponent, ref, onMounted } from "vue";
 import { $api, $prompts, $router, $store } from "../../injects";
 import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
 export default defineComponent({
   name: "Auth",
   setup() {
@@ -82,6 +83,7 @@ export default defineComponent({
     const $q = useQuasar();
     const { push, replace } = $router();
     const { state, dispatch } = $store();
+    const { t } = useI18n();
 
     onMounted(() => {
       if (state.auth.token) {
@@ -91,13 +93,12 @@ export default defineComponent({
 
     const validations = ref({
       email: [
-        (val: string) => !!val || "Email requis",
-        (val: string) => isEmail(val) || "Email invalide",
+        (val: string) => !!val || t("auth.emailPresenceError"),
+        (val: string) => isEmail(val.trim()) || t("auth.emailValidationError"),
       ],
       password: [
-        (val: string) => !!val || "Mot de passe requis",
-        (val: string) =>
-          val.length > 5 || "Mot de passe doit avoir au minimum 6 caractères",
+        (val: string) => !!val || t("auth.passwordPresenceError"),
+        (val: string) => val.length > 5 || t("auth.passwordLengthError"),
       ],
     });
 
@@ -119,10 +120,10 @@ export default defineComponent({
           dispatch("auth/updateUser", user);
           push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })
-        .catch((error) => {
+        .catch(() => {
           loading.value = false;
           $q.notify({
-            message: error.message,
+            message: t("auth.loginFailed"),
             color: "negative",
             position: "top",
           });
