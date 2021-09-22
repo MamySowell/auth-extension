@@ -8,7 +8,7 @@
 # Install
 
 ```bash
-quasar ext add @gastienne/auth
+quasar ext add @sowell/auth
 ```
 
 Quasar CLI will retrieve it from NPM and install the extension.
@@ -78,7 +78,7 @@ The default is auth/getInfosUser and return email or phone number
 # Uninstall
 
 ```bash
-quasar ext remove @gastienne/auth
+quasar ext remove @sowell/auth
 ```
 
 # Info
@@ -108,21 +108,13 @@ In auth mutation:
 
     export function clearToken(state) {
         state.token = null
-        state.emailOrPhoneNumber = null
     }
 
-    export function setInfosUser(state, payload) {
-        state.emailOrPhoneNumber = payload
-    }
 
 In auth getter:
 
     export function getToken(state) {
         return state.token
-    }
-
-    export function getInfosUser(state) {
-        return state.emailOrPhoneNumber
     }
 
 # Donate
