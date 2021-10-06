@@ -6,7 +6,7 @@ import { headers } from "../config/setupHeaders";
 import { boot } from "quasar/wrappers";
 
 const {
-  "@gastienne/auth": { AUTH_SERVER_BASE_URL },
+  "@sowell/auth": { AUTH_SERVER_BASE_URL },
 } = prompts;
 
 const $api = axios.create({

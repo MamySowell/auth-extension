@@ -1,15 +1,15 @@
 const path = require("path");
 
 function extendConf(conf: any) {
-  conf.boot.push("~@gastienne/quasar-app-extension-auth/src/boot/register.ts");
+  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/register.ts");
 
   conf.boot.push(
-    "~@gastienne/quasar-app-extension-auth/src/boot/router-guard.ts"
+    "~@sowell/quasar-app-extension-auth/src/boot/router-guard.ts"
   );
 
-  conf.boot.push("~@gastienne/quasar-app-extension-auth/src/boot/i18n.ts");
+  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/i18n.ts");
 
-  conf.boot.push("~@gastienne/quasar-app-extension-auth/src/boot/axios.ts");
+  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/axios.ts");
 
   conf.build.transpileDependencies.push(/quasar-app-extension-auth[\\/]src/);
 
@@ -26,7 +26,7 @@ function extendConf(conf: any) {
 
 const chainWebpack = (ctx: any, chain: any) => {
   chain.resolve.alias.set(
-    "@gastienne/auth",
+    "@sowell/auth",
     path.resolve(__dirname, "./components")
   );
 };

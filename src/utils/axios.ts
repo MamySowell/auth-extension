@@ -4,7 +4,7 @@ import qs from "qs"
 // @ts-ignore
 import prompts from "app/quasar.extensions.json"
 
-const { "@gastienne/auth": { AUTH_SERVER_BASE_URL } } = prompts
+const { "@sowell/auth": { AUTH_SERVER_BASE_URL } } = prompts
 
 export const axiosInstance: AxiosInstance = axios.create({
   paramsSerializer: params => {

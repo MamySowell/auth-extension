@@ -3,7 +3,7 @@ import { axiosInstance } from "./axios"
 import prompts from "app/quasar.extensions.json"
 
 const {
-  "@gastienne/auth": {
+  "@sowell/auth": {
     AUTH_SERVER_SIGNING_ROUTE,
     AUTH_SERVER_RESET_PASSWORD_ROUTE,
     AUTH_SERVER_UPDATE_PASSWORD_ROUTE

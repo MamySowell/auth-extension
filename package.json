@@ -1,5 +1,5 @@
 {
-  "name": "@gastienne/quasar-app-extension-auth",
+  "name": "@sowell/quasar-app-extension-auth",
   "version": "1.0.5",
   "description": "A Quasar auth app extension",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "keywords": [],
-  "author": "GastienneLea <lea@sowellapp.com>",
+  "author": "Sowell SaS <https://www.sowellapp.com/qui-sommes-nous>",
   "license": "MIT",
   "engines": {
     "node": ">= 8.9.0",

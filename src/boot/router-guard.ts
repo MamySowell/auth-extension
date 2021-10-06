@@ -4,7 +4,7 @@ import { boot } from "quasar/wrappers"
 
 export default boot(({ router, store }) => {
   const {
-    "@gastienne/auth": { LOCAL_LOGIN_ROUTE, LOCAL_CHECK_CODE_ROUTE }
+    "@sowell/auth": { LOCAL_LOGIN_ROUTE, LOCAL_CHECK_CODE_ROUTE }
   } = prompts
 
   router.beforeEach((to, from, next) => {

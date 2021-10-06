@@ -11,16 +11,16 @@ export interface PromptsInterface {
   AUTH_TYPE: string;
   VUEX_SET_TOKEN_MUTATION: string;
   VUEX_CLEAR_TOKEN_MUTATION: string;
-  VUEX_SET_EMAIL_OR_PHONENUMBER_USER_MUTATION: string;
+  VUEX_SET_EMAIL_MUTATION: string;
   VUEX_SET_INFOS_USER_MUTATION: string;
   VUEX_GET_TOKEN_GETTER: string;
   VUEX_GET_INFOS_USER_GETTER: string;
 }
 export const $prompts = () => {
   const $prompts =
-    inject<Record<"@gastienne/auth", PromptsInterface>>("$prompts");
+    inject<Record<"@sowell/auth", PromptsInterface>>("$prompts");
   if ($prompts == undefined) {
     throw Error("Could not inject prompts");
   }
-  return $prompts["@gastienne/auth"];
+  return $prompts["@sowell/auth"];
 };

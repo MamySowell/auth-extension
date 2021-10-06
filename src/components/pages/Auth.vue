@@ -12,11 +12,11 @@
           <q-form class="q-gutter-md" @submit="onSubmit">
             <q-card-section>
               <q-input
-                id="email"
-                v-model.trim="emailOrPhone"
+                data-cy="email"
+                v-model.trim="email"
                 type="email"
                 :label="$t('auth.email')"
-                :rules="validations['emailOrPhone']"
+                :rules="validations['email']"
                 lazy-rules
                 autofocus
                 rounded
@@ -25,7 +25,7 @@
                 class="full-width q-mb-md"
               />
               <q-input
-                id="password"
+                data-cy="password"
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 :label="$t('auth.password')"
@@ -55,6 +55,7 @@
             </div>
             <q-card-actions>
               <q-btn
+                data-cy="submit-login"
                 rounded
                 :label="$t('auth.login')"
                 color="primary"
@@ -136,8 +137,7 @@ export default defineComponent({
     const $q = useQuasar();
     const $router = useRouter();
     const { defaults, post } = $api();
-    const phoneRegex = /\+.[0-9]/;
-    const emailOrPhone = ref("");
+    const email = ref("");
     const password = ref("");
     const loading = ref(false);
     const showPassword = ref(false);
@@ -151,11 +151,10 @@ export default defineComponent({
     });
 
     const validations = ref({
-      emailOrPhone: [
+      email: [
         (val: string) => !!val || t("auth.emailPresenceError"),
         (val: string) =>
           isEmail(val) ||
-          phoneRegex.test(val) ||
           t("auth.emailValidationError"),
       ],
       password: [(val: any) => !!val || t("auth.passwordPresenceError")],
@@ -167,11 +166,7 @@ export default defineComponent({
         data = {
           email: emailResetPassword.value,
         };
-      } else if (phoneRegex.test(emailResetPassword.value)) {
-        data = {
-          phone_number: emailResetPassword.value,
-        };
-      }
+      } 
 
       $auth
         .resetPassword(data)
@@ -196,14 +191,9 @@ export default defineComponent({
       loading.value = true;
       let data = null;
 
-      if (isEmail(emailOrPhone.value)) {
+      if (isEmail(email.value)) {
         data = {
-          email: emailOrPhone.value,
-          password: password.value,
-        };
-      } else if (phoneRegex.test(emailOrPhone.value)) {
-        data = {
-          phone_number: emailOrPhone.value,
+          email: email.value,
           password: password.value,
         };
       }
@@ -228,7 +218,7 @@ export default defineComponent({
     };
 
     return {
-      emailOrPhone,
+      email,
       password,
       loading,
       showPassword,

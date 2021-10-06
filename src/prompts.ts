@@ -78,11 +78,11 @@ export = function () {
       default: "auth/clear_token"
     },
     {
-      name: "VUEX_SET_EMAIL_OR_PHONENUMBER_USER_MUTATION",
+      name: "VUEX_SET_EMAIL_MUTATION",
       type: "input",
       required: true,
       message:
-        "Vuex mutation to store user email or phone number when authenticated",
+        "Vuex mutation to store user email when authenticated",
       default: "auth/set_email_user"
     },
     {

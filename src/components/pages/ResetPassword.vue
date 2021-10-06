@@ -64,7 +64,7 @@ export default defineComponent({
     const { t } = useI18n()
 
     const {
-      "@gastienne/auth": {
+      "@sowell/auth": {
         LOCAL_SUCCESS_REDIRECTION_ROUTE
       }
     } = prompts
