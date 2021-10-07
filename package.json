@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-mamy-auth",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A Quasar auth app extension",
   "main": "dist/index.js",
   "repository": {
@@ -21,8 +21,7 @@
   "devDependencies": {
     "@types/node": "^16.9.1",
     "@types/validator": "^13.6.3",
-    "quasar": "^2.0.4",
-    "typescript": "^4.4.2"
+    "quasar": "^2.0.4"
   },
   "directories": {
     "test": "test"
