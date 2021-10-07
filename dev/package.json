@@ -30,7 +30,7 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-vue": "^7.0.0",
-    "quasar-app-extension-mamy-auth": "^1.1.1"
+    "quasar-app-extension-mamy-auth": "^1.1.2"
   },
   "browserslist": [
     "last 10 Chrome versions",
