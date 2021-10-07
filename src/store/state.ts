@@ -1,11 +1,12 @@
-export interface AuthStateInterface {
-  token: string|null;
-}
+import { AuthStateInterface } from "../interfaces";
 
 function state(): AuthStateInterface {
   return {
-    token: ''
-  }
-};
+    token: "",
+    user: {
+      roles: [],
+    },
+  };
+}
 
 export default state;

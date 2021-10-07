@@ -62,6 +62,7 @@
                 :loading="loading"
                 type="submit"
                 class="full-width"
+                :disable="isSubmitBtnDisabled()"
               />
             </q-card-actions>
           </q-form>
@@ -112,71 +113,59 @@
 
 <script lang="ts">
 //import prompts from "app/quasar.extensions.json";
-import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
-import { ref, onMounted, defineComponent, inject } from "vue";
 import isEmail from "validator/es/lib/isEmail";
+import { defineComponent, ref, onMounted } from "vue";
+import { $api, $prompts, $router, $store } from "../../injects";
+import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
-import { AuthHelper } from "../../utils/helpers";
-import { Store } from "vuex";
-import { $prompts, $api } from "../../injects";
+import { AxiosError, AxiosResponse } from "axios";
 export default defineComponent({
   name: "Auth",
   setup() {
-    const { t } = useI18n();
-
-    const {
-      AUTH_TYPE,
-      LOCAL_SUCCESS_REDIRECTION_ROUTE,
-      LOCAL_CHECK_CODE_ROUTE,
-      AUTH_SERVER_SIGNING_ROUTE,
-    } = $prompts();
-
-    const $store = inject("$store") as Store<any>;
-    const $auth = inject<AuthHelper>("$auth") as AuthHelper;
-    const $q = useQuasar();
-    const $router = useRouter();
-    const { defaults, post } = $api();
     const email = ref("");
     const password = ref("");
     const loading = ref(false);
     const showPassword = ref(false);
     const forgottenPassword = ref(false);
     const emailResetPassword = ref("");
+    const { post } = $api();
+    const {
+      LOCAL_SUCCESS_REDIRECTION_ROUTE,
+      AUTH_SERVER_SIGNING_ROUTE,
+      AUTH_SERVER_RESET_PASSWORD_ROUTE,
+    } = $prompts();
+    const $q = useQuasar();
+    const { push, replace } = $router();
+    const { state, dispatch } = $store();
+    const { t } = useI18n();
 
     onMounted(() => {
-      if ($store.state.auth.token) {
-        $router.replace(LOCAL_SUCCESS_REDIRECTION_ROUTE);
+      if (state.auth.token) {
+        replace(LOCAL_SUCCESS_REDIRECTION_ROUTE);
       }
     });
 
     const validations = ref({
       email: [
         (val: string) => !!val || t("auth.emailPresenceError"),
-        (val: string) =>
-          isEmail(val) ||
-          t("auth.emailValidationError"),
+        (val: string) => isEmail(val.trim()) || t("auth.emailValidationError"),
       ],
-      password: [(val: any) => !!val || t("auth.passwordPresenceError")],
+      password: [(val: string) => !!val || t("auth.passwordPresenceError")],
     });
 
     const resetPassword = () => {
-      let data = null;
-      if (isEmail(emailResetPassword.value)) {
-        data = {
-          email: emailResetPassword.value,
-        };
-      } 
+      const data = {
+        email: emailResetPassword.value,
+      };
 
-      $auth
-        .resetPassword(data)
+      post(AUTH_SERVER_RESET_PASSWORD_ROUTE, data)
         .then(() => {
           $q.notify({
             message: t("auth.emailSent"),
             color: "positive",
             position: "top",
           });
-          $router.push(LOCAL_CHECK_CODE_ROUTE);
+          forgottenPassword.value = false;
         })
         .catch(() => {
           $q.notify({
@@ -189,32 +178,44 @@ export default defineComponent({
 
     const onSubmit = () => {
       loading.value = true;
-      let data = null;
-
-      if (isEmail(email.value)) {
-        data = {
+      const data = {
+        auth: {
           email: email.value,
           password: password.value,
-        };
-      }
+        },
+      };
 
       post(AUTH_SERVER_SIGNING_ROUTE, data)
-        .then((response: any) => {
-          const token = response.data.token;
-          $store.dispatch("auth/updateToken", token);
+        .then((response: AxiosResponse) => {
+          const token = response.data.jwt;
+          dispatch("auth/updateToken", token);
+          const payload = parseJwt(token);
+          const user = { roles: payload.roles };
+          dispatch("auth/updateUser", user);
 
-          defaults.headers.Authorization = `${AUTH_TYPE} ${token}`;
-
-          $router.push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
+          push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })
-        .catch(() => {
+        .catch((error: AxiosError) => {
           loading.value = false;
           $q.notify({
-            message: t("auth.loginFailed"),
+            message: t(`auth.${error.response?.status}`),
             color: "negative",
             position: "top",
           });
         });
+    };
+
+    const isSubmitBtnDisabled = () => {
+      return !(
+        email.value &&
+        isEmail(email.value) &&
+        password.value &&
+        password.value.length > 5
+      );
+    };
+
+    const parseJwt = (token: string) => {
+      return JSON.parse(window.atob(token.split(".")[1]));
     };
 
     return {
@@ -223,6 +224,7 @@ export default defineComponent({
       loading,
       showPassword,
       validations,
+      isSubmitBtnDisabled,
       onSubmit,
       forgottenPassword,
       emailResetPassword,
