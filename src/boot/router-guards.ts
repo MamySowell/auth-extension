@@ -5,7 +5,7 @@ import { BootInterface } from "../interfaces";
 
 export default boot(({ router, store }: BootInterface) => {
   const {
-    "@sowell/auth": { LOCAL_LOGIN_ROUTE, LOCAL_CHECK_CODE_ROUTE },
+    "mamy-auth": { LOCAL_LOGIN_ROUTE, LOCAL_CHECK_CODE_ROUTE },
   } = prompts;
 
   router.beforeEach((to, from, next) => {

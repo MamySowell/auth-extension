@@ -6,7 +6,7 @@ import { boot } from "quasar/wrappers";
 import { BootInterface } from "../interfaces";
 
 const {
-  "@sowell/auth": { AUTH_SERVER_BASE_URL },
+  "mamy-auth": { AUTH_SERVER_BASE_URL },
 } = prompts;
 
 export default boot(({ app }: BootInterface) => {

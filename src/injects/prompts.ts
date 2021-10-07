@@ -17,9 +17,9 @@ export interface PromptsInterface {
   VUEX_GET_INFOS_USER_GETTER: string;
 }
 export const $prompts = (): PromptsInterface => {
-  const $prompts = inject<Record<"@sowell/auth", PromptsInterface>>("$prompts");
+  const $prompts = inject<Record<"mamy-auth", PromptsInterface>>("$prompts");
   if ($prompts == undefined) {
     throw Error("Could not inject prompts");
   }
-  return $prompts["@sowell/auth"];
+  return $prompts["mamy-auth"];
 };
