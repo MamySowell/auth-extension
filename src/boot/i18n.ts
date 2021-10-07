@@ -3,6 +3,7 @@ import enUS from "../i18n/en-US";
 import frFR from "../i18n/fr-FR";
 import { BootInterface } from "../interfaces";
 export default boot(({ app }: BootInterface) => {
+  console.log("$$$$$$$$$$$$$$$$$ : ", app);
   const { getLocaleMessage, setLocaleMessage } = app["__VUE_I18N__"].global;
   const enLocale = getLocaleMessage("en-US");
   const frLocale = getLocaleMessage("fr-FR");
