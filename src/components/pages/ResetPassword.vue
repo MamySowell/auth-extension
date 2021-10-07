@@ -64,15 +64,15 @@ export default defineComponent({
   setup() {
     const { patch } = $api();
     const {
-      "@sowell/auth": { LOCAL_SUCCESS_REDIRECTION_ROUTE },
-    } = prompts;
-
+      AUTH_SERVER_UPDATE_PASSWORD_ROUTE,
+      LOCAL_SUCCESS_REDIRECTION_ROUTE,
+    } = $prompts();
     const $q = useQuasar();
-    const $auth = inject("$auth") as AuthHelper;
-    const $router = useRouter();
+    const router = useRouter();
     const password = ref("");
     const passwordConfirmation = ref("");
     const loading = ref(false);
+    const { t } = useI18n();
 
     const canSubmit = computed(() => {
       return password.value != "" &&

@@ -122,20 +122,6 @@ import { AxiosError, AxiosResponse } from "axios";
 export default defineComponent({
   name: "Auth",
   setup() {
-    const { t } = useI18n();
-
-    const {
-      AUTH_TYPE,
-      LOCAL_SUCCESS_REDIRECTION_ROUTE,
-      LOCAL_CHECK_CODE_ROUTE,
-      AUTH_SERVER_SIGNING_ROUTE,
-    } = $prompts();
-
-    const $store = inject("$store") as Store<any>;
-    const $auth = inject<AuthHelper>("$auth") as AuthHelper;
-    const $q = useQuasar();
-    const $router = useRouter();
-    const { defaults, post } = $api();
     const email = ref("");
     const password = ref("");
     const loading = ref(false);
@@ -146,7 +132,6 @@ export default defineComponent({
     const {
       LOCAL_SUCCESS_REDIRECTION_ROUTE,
       AUTH_SERVER_SIGNING_ROUTE,
-      LOCAL_CHECK_CODE_ROUTE,
       AUTH_SERVER_RESET_PASSWORD_ROUTE,
     } = $prompts();
     const $q = useQuasar();
@@ -163,17 +148,15 @@ export default defineComponent({
     const validations = ref({
       email: [
         (val: string) => !!val || t("auth.emailPresenceError"),
-        (val: string) => isEmail(val) || t("auth.emailValidationError"),
+        (val: string) => isEmail(val.trim()) || t("auth.emailValidationError"),
       ],
+      password: [(val: string) => !!val || t("auth.passwordPresenceError")],
     });
 
     const resetPassword = () => {
-      let data = null;
-      if (isEmail(emailResetPassword.value)) {
-        data = {
-          email: emailResetPassword.value,
-        };
-      }
+      const data = {
+        email: emailResetPassword.value,
+      };
 
       post(AUTH_SERVER_RESET_PASSWORD_ROUTE, data)
         .then(() => {
@@ -195,14 +178,12 @@ export default defineComponent({
 
     const onSubmit = () => {
       loading.value = true;
-      let data = null;
-
-      if (isEmail(email.value)) {
-        data = {
+      const data = {
+        auth: {
           email: email.value,
           password: password.value,
-        };
-      }
+        },
+      };
 
       post(AUTH_SERVER_SIGNING_ROUTE, data)
         .then((response: AxiosResponse) => {
