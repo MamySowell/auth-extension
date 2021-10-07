@@ -1,17 +1,17 @@
 {
-  "name": "@sowell/quasar-app-extension-auth",
-  "version": "1.0.5",
+  "name": "quasar-app-extension-mamy-auth",
+  "version": "1.0.7",
   "description": "A Quasar auth app extension",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/MamySowell/auth-extension"
   },
   "scripts": {
     "build": "tsc"
   },
   "keywords": [],
-  "author": "Sowell SaS <https://www.sowellapp.com/qui-sommes-nous>",
+  "author": "razafimandimby mamy henintsoa>",
   "license": "MIT",
   "engines": {
     "node": ">= 8.9.0",
