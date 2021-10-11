@@ -8,7 +8,10 @@
     "url": ""
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint --ext .js,.ts,.vue ./",
+    "test:e2e": "cd dev && cross-env E2E_TEST=true start-test \"quasar dev\" http-get://localhost:8080 \"cypress open\"",
+    "test:e2e:ci": "cd dev && cross-env E2E_TEST=true start-test \"quasar dev\" http-get://localhost:8080 \"cypress run\""
   },
   "keywords": [],
   "author": "Sowell SaS <https://www.sowellapp.com/qui-sommes-nous>",
@@ -22,7 +25,8 @@
     "@types/node": "^16.9.1",
     "@types/validator": "^13.6.3",
     "quasar": "^2.0.4",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.1.0"
   },
   "directories": {
     "test": "test"
