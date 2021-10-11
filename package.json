@@ -9,8 +9,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "eslint --ext .js,.ts,.vue ./",
+    "lint": "cd dev && eslint --ext .js,.ts,.vue ./",
     "dev" : "cd dev && quasar dev",
+    "dep" :"cd dev && yarn" ,
     "test:e2e": "cd dev && cross-env E2E_TEST=true start-test \"quasar dev\" http-get://localhost:8080 \"cypress open\"",
     "test:e2e:ci": "cd dev && cross-env E2E_TEST=true start-test \"quasar dev\" http-get://localhost:8080 \"cypress run\""
   },
@@ -27,7 +28,11 @@
     "@types/validator": "^13.6.3",
     "quasar": "^2.0.4",
     "typescript": "^4.4.2",
-    "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.1.0"
+    "@quasar/quasar-app-extension-testing-e2e-cypress": "^3.1.0",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-cypress": "^2.11.1",
+    "eslint-plugin-vue": "^7.0.0"
   },
   "directories": {
     "test": "test"
