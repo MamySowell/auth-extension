@@ -50,69 +50,69 @@
     </q-card>
   </q-page>
 </template>
+
 <script lang="ts">
-import prompts from "app/quasar.extensions.json"
-import { useQuasar } from "quasar"
-import { useRouter } from "vue-router"
-import { ref, computed, defineComponent, inject } from "vue"
-import { useI18n } from "vue-i18n"
-import { AuthHelper } from '../../utils/helpers'
+import { useQuasar } from "quasar";
+import { computed, defineComponent, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { $api, $prompts } from "../../injects";
 
 export default defineComponent({
   name: "ResetPassword",
+
   setup() {
-    const { t } = useI18n()
-
+    const { patch } = $api();
     const {
-      "@gastienne/auth": {
-        LOCAL_SUCCESS_REDIRECTION_ROUTE
-      }
-    } = prompts
-
-    const $q = useQuasar()
-    const $auth = inject("$auth") as AuthHelper
-    const $router = useRouter()
-    const password = ref("")
-    const passwordConfirmation = ref("")
-    const loading = ref(false)
+      AUTH_SERVER_UPDATE_PASSWORD_ROUTE,
+      LOCAL_SUCCESS_REDIRECTION_ROUTE,
+    } = $prompts();
+    const $q = useQuasar();
+    const router = useRouter();
+    const password = ref("");
+    const passwordConfirmation = ref("");
+    const loading = ref(false);
+    const { t } = useI18n();
 
     const canSubmit = computed(() => {
-      return !!password.value && password.value === passwordConfirmation.value
-    })
+      return password.value != "" &&
+        password.value === passwordConfirmation.value
+        ? false
+        : true;
+    });
 
     const validations = {
       passwordRules: [
-        (val) => !!val || t("auth.newPasswordPresenceError")
+        (val: string) => !!val || t("auth.newPasswordPresenceError"),
       ],
       passwordConfirmationRules: [
-        (val) =>
-          val === password.value || t("auth.newPasswordConfirmationFailed")
-      ]
-    }
+        (val: string) =>
+          val === password.value || t("auth.newPasswordConfirmationFailed"),
+      ],
+    };
 
     const onSubmit = () => {
       const data = {
         password: password.value,
-        password_confirmation: passwordConfirmation.value
-      }
-
-      $auth.updatePassword(data)
-      .then(() => {
-        $q.notify({
-          message: t("auth.passwordRecoverySuccess"),
-          color: "positive",
-          position: "top"
+        password_confirmation: passwordConfirmation.value,
+      };
+      patch(AUTH_SERVER_UPDATE_PASSWORD_ROUTE, data)
+        .then(() => {
+          $q.notify({
+            message: t("auth.passwordRecoverySuccess"),
+            color: "positive",
+            position: "top",
+          });
+          router.push(LOCAL_SUCCESS_REDIRECTION_ROUTE);
         })
-        $router.push(LOCAL_SUCCESS_REDIRECTION_ROUTE)
-      })
-      .catch(() => {
-        $q.notify({
-          message: t("auth.passwordRecoveryFailed"),
-          color: "negative",
-          position: "top"
-        })
-      })
-    }
+        .catch(() => {
+          $q.notify({
+            message: t("auth.passwordRecoveryFailed"),
+            color: "negative",
+            position: "top",
+          });
+        });
+    };
 
     return {
       password,
@@ -120,8 +120,20 @@ export default defineComponent({
       validations,
       loading,
       onSubmit,
-      canSubmit
-    }
+      canSubmit,
+    };
   },
-})
+});
 </script>
+
+<style scoped>
+.head,
+.q-page {
+  opacity: 0.7;
+}
+
+.q-card {
+  width: 400px;
+  padding: 50px;
+}
+</style>
