@@ -12,7 +12,7 @@
           <q-form class="q-gutter-md" @submit="onSubmit">
             <q-card-section>
               <q-input
-                id="email"
+                data-cy="email"
                 v-model.trim="email"
                 type="email"
                 :label="$t('auth.email')"
@@ -25,7 +25,7 @@
                 class="full-width q-mb-md"
               />
               <q-input
-                id="password"
+                data-cy="password"
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 :label="$t('auth.password')"
@@ -55,6 +55,7 @@
             </div>
             <q-card-actions>
               <q-btn
+                data-cy="submit-login"
                 rounded
                 :label="$t('auth.login')"
                 color="primary"
@@ -131,7 +132,6 @@ export default defineComponent({
     const {
       LOCAL_SUCCESS_REDIRECTION_ROUTE,
       AUTH_SERVER_SIGNING_ROUTE,
-      LOCAL_CHECK_CODE_ROUTE,
       AUTH_SERVER_RESET_PASSWORD_ROUTE,
     } = $prompts();
     const $q = useQuasar();
@@ -150,10 +150,7 @@ export default defineComponent({
         (val: string) => !!val || t("auth.emailPresenceError"),
         (val: string) => isEmail(val.trim()) || t("auth.emailValidationError"),
       ],
-      password: [
-        (val: string) => !!val || t("auth.passwordPresenceError"),
-        (val: string) => val.length > 5 || t("auth.passwordLengthError"),
-      ],
+      password: [(val: string) => !!val || t("auth.passwordPresenceError")],
     });
 
     const resetPassword = () => {
@@ -201,7 +198,7 @@ export default defineComponent({
         .catch((error: AxiosError) => {
           loading.value = false;
           $q.notify({
-            message: t(`auth.${error.response?.status}`),
+            message: t("auth.loginFailed"),
             color: "negative",
             position: "top",
           });
