@@ -198,7 +198,7 @@ export default defineComponent({
         .catch((error: AxiosError) => {
           loading.value = false;
           $q.notify({
-            message: t(`auth.${error.response?.status}`),
+            message: t("auth.loginFailed"),
             color: "negative",
             position: "top",
           });
