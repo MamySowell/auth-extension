@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-mamy-auth",
-  "version": "1.1.6",
+  "version": "1.2.1",
   "description": "A Quasar auth app extension",
   "main": "dist/index.js",
   "repository": {
@@ -8,7 +8,6 @@
     "url": "https://github.com/MamySowell/auth-extension"
   },
   "scripts": {
-    "build": "tsc",
     "lint": "cd dev && eslint --ext .js,.ts,.vue ./",
     "dev": "cd dev && quasar dev",
     "dep": "cd dev && yarn",
