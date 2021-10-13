@@ -1,11 +1,12 @@
 {
-"userTrue": {
+"validUser": {
   "email":"sw-sup@sowellapp.com",
   "password" :"SW-@sowell",
-  "role":"SuperAdmin"
+  "role":"SuperAdmin",
+  "passwordWrong":"Sw-@sowell"
   },
-"userWrong": {
-  "email":"sw-sup@sowellapp.com",
+"invalidUser": {
+  "email":"user@exemple.com",
   "password" :"123456",
   "role":"none"
   }

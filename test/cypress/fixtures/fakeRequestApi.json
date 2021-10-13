@@ -1,0 +1,6 @@
+{
+    "token": "tokenbyjwt",
+    "data": {
+        "role":"SuperAdmin"
+         }
+}
