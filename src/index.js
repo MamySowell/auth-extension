@@ -9,28 +9,22 @@ function extendConf(conf) {
     }
   });
 
-  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/register.ts");
+  conf.boot.push("~quasar-app-extension-mamy-auth/src/boot/register.ts");
 
-  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/store.ts");
+  conf.boot.push("~quasar-app-extension-mamy-auth/src/boot/store.ts");
 
-  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/router.ts");
+  conf.boot.push("~quasar-app-extension-mamy-auth/src/boot/router.ts");
 
-  conf.boot.push(
-    "~@sowell/quasar-app-extension-auth/src/boot/router-guards.ts"
-  );
-  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/axios.ts");
+  conf.boot.push("~quasar-app-extension-mamy-auth/src/boot/router-guards.ts");
 
-  conf.boot.push("~@sowell/quasar-app-extension-auth/src/boot/i18n.ts");
+  conf.boot.push("~quasar-app-extension-mamy-auth/src/boot/axios.ts");
 
   conf.build.transpileDependencies.push(/quasar-app-extension-auth[\\/]src/);
 
   console.log("Boot sowell auth");
 }
 const chainWebpack = (ctx, chain) => {
-  chain.resolve.alias.set(
-    "@sowell/auth",
-    path.resolve(__dirname, "./components")
-  );
+  chain.resolve.alias.set("mamy-auth", path.resolve(__dirname, "./components"));
 };
 module.exports = function (api) {
   api.compatibleWith("quasar", "^2.0.0");

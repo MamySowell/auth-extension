@@ -14,14 +14,31 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands';
+import "./commands";
 
-const resizeObserverLoopError = 'ResizeObserver loop limit exceeded';
+const resizeObserverLoopError = "ResizeObserver loop limit exceeded";
 
-Cypress.on('uncaught:exception', (err) => {
+Cypress.on("uncaught:exception", (err) => {
   if (err.message.includes(resizeObserverLoopError)) {
     // returning false here prevents Cypress from
     // failing the test
     return false;
   }
+});
+
+Cypress.on("window:before:load", (win) => {
+  win.handleFromCypress = function (request) {
+    return fetch(request.url, {
+      method: request.method,
+      headers: request.requestHeaders,
+      body: request.requestBody,
+    }).then((res) => {
+      let content = res.headers.get("content-type").includes("application/json")
+        ? res.json()
+        : res.text();
+      return new Promise((resolve) => {
+        content.then((body) => resolve([res.status, res.headers, body]));
+      });
+    });
+  };
 });
